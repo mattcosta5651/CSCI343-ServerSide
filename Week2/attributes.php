@@ -3,7 +3,7 @@
 	This is an example of 
    	a multi line comment 
 	*/
-	require_once "../CSCI343-Public/php/Utilities/functions.php";
+	require_once "../../CSCI343-Public/php/Utilities/functions.php";
 
 	echo "<h3>Enter a character name.</h3>";
 	echo "<h3>Enter the character's strength from 1-10.</h3>";
