@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Weather Report</title>
+
+    <!-- Bootstrap -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+
+    <style>
+
+	  </style>
+
+	</head>
+	<body>
+	    <div class = "jumbotron text-center">
+	        <h1>Wonderful Weather World</h1>
+	    </div>
+		<!-- page content -->
+		<div class="container">
+			<form id="weather">
+				<div class="form-group">
+					<label for="zip">Zip Code or 'City, State'</label>
+					<input type="text" class="form-control"
+						id="zip" name="zip" placeholder="Enter a zip code or 'City, State'">
+				</div>
+				<button id="btn" type="button" class="btn btn-default">Get Forecast</button>
+			</form>
+
+            <br />
+			<div id = "result" class="hidden jumbotron">
+			    <h1 style="font-weight: bold" class="text-center" id = "loc"></h1>
+			    <h3 id="condition"></h3>
+			    <img id="image" />
+			</div>
+			
+		</div>
+
+		<!-- jquery and bootstrap -->
+		<script src="https://code.jquery.com/jquery-1.11.2.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+
+		<!-- custom local javascript -->
+		<script>
+		    // model
+        	var model = undefined;
+			
+			// view 
+			function updateView()
+			{
+			    if (model == undefined)
+			    {
+			        $("#loc").text("");
+			    }
+				else{
+				   $("#result").removeClass("hidden");
+                   $("#loc").text("Weather for "+model.location.name+", "+model.location.region);
+                   $("#condition").text(model.current.condition.text+", "+model.current.temp_f+String.fromCharCode(176)+"F");
+                   $("#image").attr("src", model.current.condition.icon)
+				}
+			}
+
+			// controller
+			$(document).ready(function ()
+			{
+			    updateView();
+			});
+
+			$("#btn").click(function ()
+			{
+                var z = $("#zip").val();
+    			var url = "https://api.apixu.com/v1/current.json?key=713b8c0fa59e4548820201255173003&q="+z;
+    			var request = $.getJSON(url);
+    
+    			request.done(function(json)
+    			{
+    			  console.log(json);
+    			  if (json.error === undefined)
+    			  {
+    			      model = json;
+    			  }
+    			  else
+    			  {
+    				  model.error = json.error.message;
+    			  }
+    
+    			  updateView();
+    			});
+    
+    		  	request.fail(function()
+    			{
+    				model.error = "Error contacting server!";
+    		  	});   
+            });
+
+		</script>
+	</body>
+</html>
